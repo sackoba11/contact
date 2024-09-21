@@ -8,16 +8,16 @@ part of 'contact.dart';
 
 _$ContactImpl _$$ContactImplFromJson(Map<String, dynamic> json) =>
     _$ContactImpl(
-      nom: json['nom'] as String,
-      prenom: json['prenom'] as String,
-      numeroTelephone: json['numeroTelephone'] as String,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
+      phoneNumber: json['phoneNumber'] as String,
       email: json['email'] as String?,
     );
 
 Map<String, dynamic> _$$ContactImplToJson(_$ContactImpl instance) =>
     <String, dynamic>{
-      'nom': instance.nom,
-      'prenom': instance.prenom,
-      'numeroTelephone': instance.numeroTelephone,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
+      'phoneNumber': instance.phoneNumber,
       'email': instance.email,
     };

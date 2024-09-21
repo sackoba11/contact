@@ -6,50 +6,48 @@ import 'package:contact/repository_contacts/contacts_repository.dart';
 
 class ContactsImpl implements ContactRepository {
   List<Contact> contacts = [];
-  final String nomFichier = 'contacts.txt';
+  final String fileName = 'contacts.json';
 
   @override
-  void addContact({required Contact nouveauContact}) {
-    Contact? contactExiste = searchContact(nouveauContact.numeroTelephone);
+  void addContact({required Contact newContact}) {
+    Contact? contactExiste = searchContact(newContact.phoneNumber);
 
     if (contactExiste != null) {
       print(
-          'Un contact avec ce numéro de téléphone ${contactExiste.numeroTelephone} existe déjà.');
+          'Un contact avec ce numéro de téléphone ${contactExiste.phoneNumber} existe déjà.');
     } else {
-      contacts.add(nouveauContact);
-      print('Contact ajouté avec succès : ${nouveauContact.toString()}');
-      sauvegarderContacts();
+      contacts.add(newContact);
+      print('Contact ajouté avec succès : ${newContact.toString()}');
+      saveContacts();
     }
   }
 
-  Contact? searchContact(String nouveauContact) {
+  Contact? searchContact(String newContact) {
     for (var contact in contacts) {
-      if (contact.numeroTelephone == nouveauContact) {
+      if (contact.phoneNumber == newContact) {
         return contact;
       }
     }
     return null;
   }
 
-  void sauvegarderContacts() {
-    final file = File(nomFichier);
-    final content =
-        contacts.map((contact) => json.encode(contact.toJson())).join('\n');
+  void saveContacts() {
+    final file = File(fileName);
+    final contentList = contacts.map((contact) => contact.toJson()).toList();
+    final content = json.encode(contentList);
     file.writeAsStringSync(content);
-    print('Contacts sauvegardés dans $nomFichier');
+    print('Contacts sauvegardés dans $fileName');
   }
 
   @override
   List<Contact> getAllContacts() {
-    final file = File(nomFichier);
+    final file = File(fileName);
     if (file.existsSync()) {
-      final content = file.readAsStringSync();
-      contacts = content
-          .split('\n')
-          .where((line) => line.isNotEmpty)
-          .map((line) => Contact.fromJson(json.decode(line)))
-          .toList();
-      print('${contacts.length} contact(s) chargé(s) depuis $nomFichier');
+      final contentString = file.readAsStringSync();
+      final contentList = json.decode(contentString) as List;
+      contacts =
+          contentList.map((contact) => Contact.fromJson(contact)).toList();
+      print('${contacts.length} contact(s) chargé(s) depuis $fileName');
       return contacts;
     } else {
       print('Aucun fichier de contacts trouvé. Une nouvelle liste sera créée.');
@@ -59,17 +57,11 @@ class ContactsImpl implements ContactRepository {
 
   @override
   void displayContacts() {
-    final file = File(nomFichier);
-    final content = file.readAsStringSync();
-    if (content.isEmpty) {
+    final contactList = getAllContacts();
+    if (contactList.isEmpty) {
       print('Aucun contact enregistré.');
     } else {
-      contacts = content
-          .split('\n')
-          .where((line) => line.isNotEmpty)
-          .map((line) => Contact.fromJson(json.decode(line)))
-          .toList();
-      for (var i = 0; i < contacts.length; i++) {
+      for (var i = 0; i < contactList.length; i++) {
         print('${i + 1}. ${contacts[i]}');
       }
     }
@@ -80,29 +72,29 @@ class ContactsImpl implements ContactRepository {
     print('Saisie d\'un nouveau contact:');
 
     stdout.write('Nom: ');
-    String nom = stdin.readLineSync() ?? '';
+    String firstName = stdin.readLineSync() ?? '';
 
     stdout.write('Prénom: ');
-    String prenom = stdin.readLineSync() ?? '';
+    String lastName = stdin.readLineSync() ?? '';
 
     stdout.write('Numéro de téléphone: ');
-    String numeroTelephone = stdin.readLineSync() ?? '';
+    String phoneNumber = stdin.readLineSync() ?? '';
 
     stdout.write('Email (optionnel, appuyez sur Entrée pour passer): ');
     String? email = stdin.readLineSync();
     email = email!.isEmpty ? null : email;
 
     return Contact(
-      nom: nom,
-      prenom: prenom,
-      numeroTelephone: numeroTelephone,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
       email: email,
     );
   }
 
   @override
   void deletteContact() {
-    final file = File(nomFichier);
+    final file = File(fileName);
 
     if (file.existsSync()) {
       // Lire le contenu actuel du fichier
@@ -153,45 +145,57 @@ class ContactsImpl implements ContactRepository {
 
   @override
   void updateContact() {
-    final file = File(nomFichier);
-    if (file.existsSync()) {
-      // Lire le contenu actuel du fichier
-      List<String> lines = file.readAsLinesSync();
+    final contactList = getAllContacts();
+    if (contactList.isNotEmpty) {
       // Afficher le contenu actuel avec des numéros de ligne
-      print('Contenu actuel du fichier:');
-      if (lines.isNotEmpty) {
-        print(lines.length);
-        for (int i = 0; i < lines.length; i++) {
-          print('${i + 1}: ${lines[i]}');
-        }
-      } else {
-        print("Aucun contact trouvé. Veuillez ajouter des contacts !");
-        return;
-      }
-
-      // Demander à l'utilisateur quelle ligne modifier
-      stdout.write(
-          'Entrez le numéro de la ligne à modifier (1-${lines.length}) : ');
-      int lineNumber = int.tryParse(stdin.readLineSync() ?? '') ?? 0;
-
-      if (lineNumber < 1 || lineNumber > lines.length) {
-        print('Numéro de ligne invalide.');
-        return;
-      }
-      // Afficher la ligne actuelle
-      print('Ligne actuelle: ${lines[lineNumber - 1]}');
-
-      // Demander le nouveau contenu pour cette ligne
-      stdout.write('Entrez le nouveau contenu pour cette ligne : ');
-      Contact newContent = editContact();
-
-      // Modifier la ligne spécifiée
-      lines[lineNumber - 1] = json.encode(newContent.toJson());
-
-      // Écrire le contenu modifié dans le fichier
-      file.writeAsStringSync(lines.join('\n'));
-      print('La ligne $lineNumber a été modifiée avec succès.');
+      displayContacts();
+    } else {
+      print("Aucun contact trouvé. Veuillez ajouter des contacts !");
       return;
     }
+    // Demander à l'utilisateur quelle ligne modifier
+    stdout.write(
+        'Entrez le numéro de la ligne à modifier (1-${contactList.length}) : ');
+    int lineNumber = int.tryParse(stdin.readLineSync() ?? '') ?? 0;
+
+    if (lineNumber < 1 || lineNumber > contactList.length) {
+      print('Numéro de ligne invalide.');
+      return;
+    }
+    // Afficher la ligne actuelle
+    var contact = contactList[lineNumber - 1];
+    print('Modification du contact : ${contact.toString()}');
+    print('Laissez vide pour conserver la valeur actuelle.');
+
+    stdout.write('Nouveau nom (${contact.firstName}): ');
+    final newFirstName = stdin.readLineSync();
+    if (newFirstName?.isNotEmpty == true) {
+      contact = contact.copyWith(firstName: newFirstName!);
+    }
+
+    stdout.write('Nouveau prénom (${contact.lastName}): ');
+    final newLastName = stdin.readLineSync();
+    if (newLastName?.isNotEmpty == true) {
+      contact = contact.copyWith(lastName: newLastName!);
+    }
+
+    stdout.write('Nouveau numéro de téléphone (${contact.phoneNumber}): ');
+    final newPhoneNumber = stdin.readLineSync();
+    if (newPhoneNumber?.isNotEmpty == true) {
+      contact = contact.copyWith(phoneNumber: newPhoneNumber!);
+    }
+
+    stdout.write('Nouvel email (${contact.email ?? "Non défini"}): ');
+    final newEmail = stdin.readLineSync();
+    if (newEmail?.isNotEmpty == true) {
+      contact = contact.copyWith(email: newEmail!);
+    } else if (newEmail == '') {
+      contact = contact.copyWith(email: null);
+    }
+    print(contact.toJson());
+    saveContacts();
+    print('Contact modifié avec succès.');
+
+    return;
   }
 }

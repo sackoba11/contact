@@ -20,9 +20,9 @@ Contact _$ContactFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Contact {
-  String get nom => throw _privateConstructorUsedError;
-  String get prenom => throw _privateConstructorUsedError;
-  String get numeroTelephone => throw _privateConstructorUsedError;
+  String get firstName => throw _privateConstructorUsedError;
+  String get lastName => throw _privateConstructorUsedError;
+  String get phoneNumber => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
   /// Serializes this Contact to a JSON map.
@@ -39,7 +39,8 @@ abstract class $ContactCopyWith<$Res> {
   factory $ContactCopyWith(Contact value, $Res Function(Contact) then) =
       _$ContactCopyWithImpl<$Res, Contact>;
   @useResult
-  $Res call({String nom, String prenom, String numeroTelephone, String? email});
+  $Res call(
+      {String firstName, String lastName, String phoneNumber, String? email});
 }
 
 /// @nodoc
@@ -57,23 +58,23 @@ class _$ContactCopyWithImpl<$Res, $Val extends Contact>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nom = null,
-    Object? prenom = null,
-    Object? numeroTelephone = null,
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? phoneNumber = null,
     Object? email = freezed,
   }) {
     return _then(_value.copyWith(
-      nom: null == nom
-          ? _value.nom
-          : nom // ignore: cast_nullable_to_non_nullable
+      firstName: null == firstName
+          ? _value.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
               as String,
-      prenom: null == prenom
-          ? _value.prenom
-          : prenom // ignore: cast_nullable_to_non_nullable
+      lastName: null == lastName
+          ? _value.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
               as String,
-      numeroTelephone: null == numeroTelephone
-          ? _value.numeroTelephone
-          : numeroTelephone // ignore: cast_nullable_to_non_nullable
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
       email: freezed == email
           ? _value.email
@@ -90,7 +91,8 @@ abstract class _$$ContactImplCopyWith<$Res> implements $ContactCopyWith<$Res> {
       __$$ContactImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String nom, String prenom, String numeroTelephone, String? email});
+  $Res call(
+      {String firstName, String lastName, String phoneNumber, String? email});
 }
 
 /// @nodoc
@@ -106,23 +108,23 @@ class __$$ContactImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nom = null,
-    Object? prenom = null,
-    Object? numeroTelephone = null,
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? phoneNumber = null,
     Object? email = freezed,
   }) {
     return _then(_$ContactImpl(
-      nom: null == nom
-          ? _value.nom
-          : nom // ignore: cast_nullable_to_non_nullable
+      firstName: null == firstName
+          ? _value.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
               as String,
-      prenom: null == prenom
-          ? _value.prenom
-          : prenom // ignore: cast_nullable_to_non_nullable
+      lastName: null == lastName
+          ? _value.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
               as String,
-      numeroTelephone: null == numeroTelephone
-          ? _value.numeroTelephone
-          : numeroTelephone // ignore: cast_nullable_to_non_nullable
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
       email: freezed == email
           ? _value.email
@@ -136,26 +138,26 @@ class __$$ContactImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ContactImpl implements _Contact {
   _$ContactImpl(
-      {required this.nom,
-      required this.prenom,
-      required this.numeroTelephone,
+      {required this.firstName,
+      required this.lastName,
+      required this.phoneNumber,
       required this.email});
 
   factory _$ContactImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContactImplFromJson(json);
 
   @override
-  final String nom;
+  final String firstName;
   @override
-  final String prenom;
+  final String lastName;
   @override
-  final String numeroTelephone;
+  final String phoneNumber;
   @override
   final String? email;
 
   @override
   String toString() {
-    return 'Contact(nom: $nom, prenom: $prenom, numeroTelephone: $numeroTelephone, email: $email)';
+    return 'Contact(firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, email: $email)';
   }
 
   @override
@@ -163,17 +165,19 @@ class _$ContactImpl implements _Contact {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ContactImpl &&
-            (identical(other.nom, nom) || other.nom == nom) &&
-            (identical(other.prenom, prenom) || other.prenom == prenom) &&
-            (identical(other.numeroTelephone, numeroTelephone) ||
-                other.numeroTelephone == numeroTelephone) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
             (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, nom, prenom, numeroTelephone, email);
+      Object.hash(runtimeType, firstName, lastName, phoneNumber, email);
 
   /// Create a copy of Contact
   /// with the given fields replaced by the non-null parameter values.
@@ -193,19 +197,19 @@ class _$ContactImpl implements _Contact {
 
 abstract class _Contact implements Contact {
   factory _Contact(
-      {required final String nom,
-      required final String prenom,
-      required final String numeroTelephone,
+      {required final String firstName,
+      required final String lastName,
+      required final String phoneNumber,
       required final String? email}) = _$ContactImpl;
 
   factory _Contact.fromJson(Map<String, dynamic> json) = _$ContactImpl.fromJson;
 
   @override
-  String get nom;
+  String get firstName;
   @override
-  String get prenom;
+  String get lastName;
   @override
-  String get numeroTelephone;
+  String get phoneNumber;
   @override
   String? get email;
 

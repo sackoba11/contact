@@ -18,14 +18,13 @@ void main(List<String> arguments) {
     switch (choix) {
       case '1':
         var nouveauContact = gestionContacts.editContact();
-        gestionContacts.addContact(nouveauContact: nouveauContact);
+        gestionContacts.addContact(newContact: nouveauContact);
         break;
       case '2':
         gestionContacts.displayContacts();
         break;
       case '3':
         gestionContacts.updateContact();
-       
         break;
       case '4':
         gestionContacts.deletteContact();
