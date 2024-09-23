@@ -17,7 +17,8 @@ class ContactsImpl implements ContactRepository {
           'Un contact avec ce numéro de téléphone ${contactExiste.phoneNumber} existe déjà.');
     } else {
       contacts.add(newContact);
-      print('Contact ajouté avec succès : ${newContact.toString()}');
+      print(
+          'Contact ajouté avec succès :  Nom: ${newContact.firstName}, Prénom: ${newContact.lastName}, Numéro: ${newContact.phoneNumber} ${newContact.email != null ? ", Email:${newContact.email} " : ""} "');
       saveContacts();
     }
   }
@@ -61,7 +62,8 @@ class ContactsImpl implements ContactRepository {
       print('Aucun contact enregistré.');
     } else {
       for (var i = 0; i < contacts.length; i++) {
-        print('${i + 1}. ${contacts[i]}');
+        print(
+            "${i + 1}: Nom: ${contacts[i].firstName}, Prénom: ${contacts[i].lastName}, Numéro: ${contacts[i].phoneNumber} ${contacts[i].email != null ? ", Email:${contacts[i].email} " : ""} ");
       }
     }
   }
@@ -76,12 +78,11 @@ class ContactsImpl implements ContactRepository {
     stdout.write('Prénom: ');
     String lastName = stdin.readLineSync() ?? '';
 
-    stdout.write('Numéro de téléphone: ');
-    String phoneNumber = stdin.readLineSync() ?? '';
+    // stdout.write('Numéro de téléphone: ');
+    String phoneNumber = getValidPhoneNumber()!;
 
-    stdout.write('Email (optionnel, appuyez sur Entrée pour passer): ');
-    String? email = stdin.readLineSync();
-    email = email!.isEmpty ? null : email;
+    // stdout.write('Email (optionnel, appuyez sur Entrée pour passer): ');
+    String? email = getValidEmail();
 
     return Contact(
       firstName: firstName,
@@ -89,6 +90,44 @@ class ContactsImpl implements ContactRepository {
       phoneNumber: phoneNumber,
       email: email,
     );
+  }
+
+  String? getValidPhoneNumber() {
+    while (true) {
+      stdout.write('Numéro de téléphone: ');
+      String input = stdin.readLineSync() ?? '';
+
+      // Supprime les espaces et les tirets pour une validation plus simple
+      String cleanedInput = input.replaceAll(RegExp(r'[\s-]'), '');
+
+      // Vérifie si l'entrée ne contient que des chiffres et a une longueur appropriée
+      if (RegExp(r'^[0-9]{10}$').hasMatch(cleanedInput)) {
+        return cleanedInput;
+      } else {
+        print(
+            'Numéro de téléphone invalide. Veuillez entrer un numéro valide de 10 chiffres.');
+      }
+    }
+  }
+
+  String? getValidEmail() {
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
+
+    while (true) {
+      stdout.write('Adresse e-mail: ');
+      String input = stdin.readLineSync()?.trim() ?? '';
+      if (input.isEmpty) {
+        return null;
+      }
+
+      if (emailRegex.hasMatch(input)) {
+        return input;
+      } else {
+        print(
+            'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.');
+      }
+    }
   }
 
   @override
@@ -107,7 +146,7 @@ class ContactsImpl implements ContactRepository {
     }
     final delettecontact = contacts.removeAt(input - 1);
     saveContacts();
-    print('Contact ${delettecontact.toString()} supprimé avec succès.');
+    print('Contact ${delettecontact.phoneNumber} supprimé avec succès.');
     return;
   }
 
@@ -153,12 +192,12 @@ class ContactsImpl implements ContactRepository {
     final newEmail = stdin.readLineSync();
     if (newEmail?.isNotEmpty == true) {
       contact = contact.copyWith(email: newEmail!);
-    } else if (newEmail == '') {
-      contact = contact.copyWith(email: null);
     }
-    print(contact.toJson());
+
     contacts[lineNumber - 1] = contact;
     saveContacts();
+    print(
+        "Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""} ");
     print('Contact modifié avec succès.');
     return;
   }
