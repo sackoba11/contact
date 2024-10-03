@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:contact/repository_contacts/contacts_impl.dart';
+import 'package:contact/core/utilities/create_contact/create_contact.dart';
+import 'package:contact/repository_contacts/contacts_repository_impl.dart';
 
 void main(List<String> arguments) {
   var gestionContacts = ContactsImpl();
@@ -17,7 +18,7 @@ void main(List<String> arguments) {
     String? choix = stdin.readLineSync();
     switch (choix) {
       case '1':
-        var nouveauContact = gestionContacts.editContact();
+        var nouveauContact = CreateContact.createContact();
         gestionContacts.addContact(newContact: nouveauContact);
         break;
       case '2':
@@ -27,7 +28,7 @@ void main(List<String> arguments) {
         gestionContacts.updateContact();
         break;
       case '4':
-        gestionContacts.deletteContact();
+        gestionContacts.deleteContact();
         break;
       case '5':
         print('Au revoir !');
