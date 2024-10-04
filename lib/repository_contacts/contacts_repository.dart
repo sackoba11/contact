@@ -1,9 +1,8 @@
 import 'package:contact/models/contact.dart';
 
 abstract class ContactRepository {
-  void addContact({required Contact newContact});
-  Map<String, Contact> getAllContacts();
-
-  void deleteContact();
-  void updateContact();
+  Contact? addContact({required Contact newContact});
+  Map<String, Contact>? getAllContacts();
+  void deleteContact({required String contactToDelete});
+  void updateContact({required Map<String, Contact> contactsUpdated});
 }

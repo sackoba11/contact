@@ -14,7 +14,7 @@ class CreateContact {
     stdout.write('Prénom: ');
     String lastName = stdin.readLineSync() ?? '';
 
-    // stdout.write('Numéro de téléphone: ');
+    stdout.write('Numéro de téléphone: ');
     String phoneNumber = PhoneNumberFormater.formatPhoneNumber()!;
 
     // stdout.write('Email (optionnel, appuyez sur Entrée pour passer): ');

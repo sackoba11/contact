@@ -3,7 +3,6 @@ import 'dart:io';
 class PhoneNumberFormater {
   static String? formatPhoneNumber() {
     while (true) {
-      stdout.write('Numéro de téléphone: ');
       String input = stdin.readLineSync() ?? '';
 
       // Supprime les espaces et les tirets pour une validation plus simple

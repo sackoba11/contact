@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:contact/core/utilities/create_contact/create_contact.dart';
-import 'package:contact/repository_contacts/contacts_repository_impl.dart';
+import 'package:contact/usecases/base_usecases.dart';
 
 void main(List<String> arguments) {
-  var gestionContacts = ContactsImpl();
-  gestionContacts.getAllContacts();
+  var baseusecases = BaseUsecases();
 
   while (true) {
     print('\nGestion des contacts:');
@@ -19,16 +18,16 @@ void main(List<String> arguments) {
     switch (choix) {
       case '1':
         var nouveauContact = CreateContact.createContact();
-        gestionContacts.addContact(newContact: nouveauContact);
+        baseusecases.addContact(newContact: nouveauContact);
         break;
       case '2':
-        gestionContacts.displayContacts();
+        baseusecases.displayContacts();
         break;
       case '3':
-        gestionContacts.updateContact();
+        baseusecases.updateContact();
         break;
       case '4':
-        gestionContacts.deleteContact();
+        baseusecases.removeContact();
         break;
       case '5':
         print('Au revoir !');
