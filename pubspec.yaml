@@ -8,6 +8,9 @@ environment:
 
 executables:
   contact:
+  #dart pub global activate --source path .
+  #dart compile exe bin/contact.dart
+  
 # Add regular dependencies here.
 dependencies:
   freezed_annotation: ^2.4.4
