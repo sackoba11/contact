@@ -6,6 +6,8 @@ version: 1.0.0
 environment:
   sdk: ^3.4.1
 
+executables:
+  contact:
 # Add regular dependencies here.
 dependencies:
   freezed_annotation: ^2.4.4
