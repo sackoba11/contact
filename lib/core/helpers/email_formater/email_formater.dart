@@ -1,13 +1,13 @@
-import 'dart:io';
+import 'package:contact/core/utilities/input_controller/input_controller.dart';
 
 class EmailFormater {
-  static String? formatEmail() {
+  static String? formatEmail({String? title}) {
     final emailRegex =
         RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
 
     while (true) {
-      stdout.write('Adresse e-mail: ');
-      String input = stdin.readLineSync()?.trim() ?? '';
+      String input =
+          InputController.inputController(title:title);
       if (input.isEmpty) {
         return null;
       }

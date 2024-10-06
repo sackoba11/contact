@@ -1,29 +1,29 @@
-import 'dart:io';
-
 import 'package:contact/models/contact.dart';
+import '../input_controller/input_controller.dart';
 
 class UpdateDatacontact {
   static Contact updateDataContact({required Contact contactToUpdate}) {
-    stdout.write('Nouveau nom (${contactToUpdate.firstName}): ');
-    final newFirstName = stdin.readLineSync();
-    if (newFirstName?.isNotEmpty == true) {
-      contactToUpdate = contactToUpdate.copyWith(firstName: newFirstName!);
+    final newFirstName = InputController.inputController(
+        title: 'Nouveau nom (${contactToUpdate.firstName}): ');
+    if (newFirstName.isNotEmpty) {
+      contactToUpdate = contactToUpdate.copyWith(firstName: newFirstName);
     }
-    stdout.write('Nouveau prénom (${contactToUpdate.lastName}): ');
-    final newLastName = stdin.readLineSync();
-    if (newLastName?.isNotEmpty == true) {
-      contactToUpdate = contactToUpdate.copyWith(lastName: newLastName!);
+    final newLastName = InputController.inputController(
+        title: 'Nouveau prénom (${contactToUpdate.lastName}): ');
+    if (newLastName.isNotEmpty) {
+      contactToUpdate = contactToUpdate.copyWith(lastName: newLastName);
     }
-    stdout.write(
-        'Nouveau numéro de téléphone (${contactToUpdate.phoneNumber}): ');
-    final newPhoneNumber = stdin.readLineSync();
-    if (newPhoneNumber?.isNotEmpty == true) {
-      contactToUpdate = contactToUpdate.copyWith(phoneNumber: newPhoneNumber!);
+
+    final newPhoneNumber = InputController.inputController(
+        title:
+            'Nouveau numéro de téléphone (${contactToUpdate.phoneNumber}): ');
+    if (newPhoneNumber.isNotEmpty) {
+      contactToUpdate = contactToUpdate.copyWith(phoneNumber: newPhoneNumber);
     }
-    stdout.write('Nouvel email (${contactToUpdate.email ?? "Non défini"}): ');
-    final newEmail = stdin.readLineSync();
-    if (newEmail?.isNotEmpty == true) {
-      contactToUpdate = contactToUpdate.copyWith(email: newEmail!);
+    final newEmail = InputController.inputController(
+        title: 'Nouvel email (${contactToUpdate.email ?? "Non défini"}): ');
+    if (newEmail.isNotEmpty) {
+      contactToUpdate = contactToUpdate.copyWith(email: newEmail);
     }
 
     return contactToUpdate;

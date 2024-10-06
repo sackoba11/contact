@@ -1,9 +1,10 @@
-import 'dart:io';
+import '../../utilities/input_controller/input_controller.dart';
 
 class PhoneNumberFormater {
-  static String? formatPhoneNumber() {
+  static String? formatPhoneNumber({String? title}) {
     while (true) {
-      String input = stdin.readLineSync() ?? '';
+      
+      String input = InputController.inputController(title: title);
 
       // Supprime les espaces et les tirets pour une validation plus simple
       String cleanedInput = input.replaceAll(RegExp(r'[\s-]'), '');

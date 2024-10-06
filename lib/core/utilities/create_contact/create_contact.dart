@@ -1,24 +1,20 @@
-import 'dart:io';
-
 import '../../../models/contact.dart';
 import '../../helpers/email_formater/email_formater.dart';
 import '../../helpers/phone_number_formater/phone_number_formater.dart';
+import '../input_controller/input_controller.dart';
 
 class CreateContact {
   static Contact createContact() {
-    print('Saisie d\'un nouveau contact:');
+    print("Saisie d'un nouveau contact:");
 
-    stdout.write('Nom: ');
-    String firstName = stdin.readLineSync() ?? '';
+    String firstName = InputController.inputController(title: 'Nom: ');
 
-    stdout.write('Prénom: ');
-    String lastName = stdin.readLineSync() ?? '';
+    String lastName = InputController.inputController(title: 'Prénom: ');
 
-    stdout.write('Numéro de téléphone: ');
-    String phoneNumber = PhoneNumberFormater.formatPhoneNumber()!;
+    String phoneNumber =
+        PhoneNumberFormater.formatPhoneNumber(title: 'Numéro de téléphone: ')!;
 
-    // stdout.write('Email (optionnel, appuyez sur Entrée pour passer): ');
-    String? email = EmailFormater.formatEmail();
+    String? email = EmailFormater.formatEmail(title: 'Adresse e-mail: ');
 
     return Contact(
       firstName: firstName,

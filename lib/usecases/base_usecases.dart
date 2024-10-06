@@ -5,6 +5,7 @@ import 'package:contact/repository_contacts/contacts_repository.dart';
 
 import '../core/helpers/phone_number_formater/phone_number_formater.dart';
 import '../core/utilities/contact_storage_manager/contact_storage_manager.dart';
+import '../core/utilities/create_contact/create_contact.dart';
 import '../models/contact.dart';
 import '../repository_contacts/contacts_repository_impl.dart';
 
@@ -14,7 +15,8 @@ class BaseUsecases {
   ContactRepository contactRepository = ContactsRepositoryImpl();
   var contactStorageManager = ContactStorageManagerImpl();
 
-  void addContact({required Contact newContact}) {
+  void addContact() {
+    var newContact = CreateContact.createContact();
     var contact = contactRepository.addContact(newContact: newContact);
     if (contact != null) {
       print(
