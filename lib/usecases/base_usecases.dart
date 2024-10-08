@@ -1,92 +1,105 @@
-import 'dart:io';
-
-import 'package:contact/core/utilities/update_data_contact/update_data_contact.dart';
+import 'package:contact/core/utilities/generic_message/generic_message.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
 
 import '../core/helpers/phone_number_formater/phone_number_formater.dart';
 import '../core/utilities/contact_storage_manager/contact_storage_manager.dart';
-import '../core/utilities/create_contact/create_contact.dart';
-import '../models/contact.dart';
+import '../core/utilities/contact_manager/contact_manager.dart';
 import '../repository_contacts/contacts_repository_impl.dart';
 
 class BaseUsecases {
-  Map<String, Contact>? contacts = {};
+  // Map<String, Contact>? contacts = {};
 
   ContactRepository contactRepository = ContactsRepositoryImpl();
   var contactStorageManager = ContactStorageManagerImpl();
 
   void addContact() {
-    var newContact = CreateContact.createContact();
-    var contact = contactRepository.addContact(newContact: newContact);
-    if (contact != null) {
-      print(
-          'Contact ajouté avec succès : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""}');
-    } else {
-      print("Impossible d'ajouter ce contact");
+    try {
+      var newContact = ContactManager.createContact();
+      var contact = contactRepository.addContact(newContact: newContact);
+      if (contact != null) {
+        PrintGenericMessage(
+                'Contact ajouté avec succès : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""}')
+            .getMessage();
+      } else {
+        PrintGenericMessage("Impossible d'ajouter ce contact").getMessage();
+      }
+    } catch (e) {
+      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
   }
 
   void displayContacts() {
-    contacts = contactRepository.getAllContacts();
+    try {
+      final contacts = contactRepository.getAllContacts();
 
-    if (contacts != null) {
-      print(
-          '${contacts!.length} contact(s) chargé(s) depuis ${contactStorageManager.fileName}');
+      if (contacts != null) {
+        PrintGenericMessage(
+                '${contacts.length} contact(s) chargé(s) depuis ${contactStorageManager.fileName}')
+            .getMessage();
 
-      var number = 1;
-      contacts!.forEach((key, contact) {
-        print(
-            "$number : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""} ");
-        number++;
-      });
-    } else {
-      print('Aucun contact enregistré.');
+        var number = 1;
+        contacts.forEach((key, contact) {
+          PrintGenericMessage(
+                  "$number : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""} ")
+              .getMessage();
+          number++;
+        });
+      } else {
+        PrintGenericMessage('Aucun contact enregistré.').getMessage();
+      }
+    } catch (e) {
+      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
   }
 
   void updateContact() {
-    contacts = contactRepository.getAllContacts();
+    final contacts = contactRepository.getAllContacts();
     if (contacts!.isNotEmpty) {
-      // Afficher le contenu actuel avec des numéros de ligne
       displayContacts();
     } else {
-      print("Aucun contact trouvé. Veuillez ajouter des contacts !");
+      PrintGenericMessage(
+              "Aucun contact trouvé. Veuillez ajouter des contacts !")
+          .getMessage();
       return;
     }
-
     // Demander à l'utilisateur quel numéro modifier
-    stdout.write(
-        'Entrez le numéro à modifier parmi le(s) numéro(s) ci-dessus : ');
-    String updateNumber = PhoneNumberFormater.formatPhoneNumber()!;
+    String updateNumber = PhoneNumberFormater.formatPhoneNumber(
+        title:
+            'Entrez le numéro à modifier parmi le(s) numéro(s) ci-dessus : ')!;
 
-    var contactupdate = contacts![updateNumber];
+    if (contacts[updateNumber] != null) {
+      PrintGenericMessage(
+              'Modification du contact : ${updateNumber.toString()}')
+          .getMessage();
+      PrintGenericMessage('Laissez vide pour conserver la valeur actuelle.')
+          .getMessage();
+      final updatedContact =
+          contactRepository.updateContact(updateNumber: updateNumber);
 
-    if (contactupdate != null) {
-      print('Modification du contact : ${updateNumber.toString()}');
-      print('Laissez vide pour conserver la valeur actuelle.');
-      var updatedContact =
-          UpdateDatacontact.updateDataContact(contactToUpdate: contactupdate);
-      contacts![updateNumber] = updatedContact;
-      contactRepository.updateContact(contactsUpdated: contacts!);
-      print(
-          "Nom: ${updatedContact.firstName}, Prénom: ${updatedContact.lastName}, Numéro: ${updatedContact.phoneNumber} ${updatedContact.email != null ? ", Email:${updatedContact.email} " : ""} ");
-      print('Contact modifié avec succès.');
+      PrintGenericMessage(
+              "Nom: ${updatedContact.firstName}, Prénom: ${updatedContact.lastName}, Numéro: ${updatedContact.phoneNumber} ${updatedContact.email != null ? ", Email:${updatedContact.email} " : ""} ")
+          .getMessage();
+      PrintGenericMessage('Contact modifié avec succès.').getMessage();
     } else {
-      print("Aucun contact ne correspond au contact : $updateNumber");
+      PrintGenericMessage(
+              "Aucun contact ne correspond au contact : $updateNumber")
+          .getMessage();
     }
   }
 
   void removeContact() {
+    final contacts = contactRepository.getAllContacts();
     if (contacts!.isEmpty) {
-      print('Aucun contact à supprimer.');
+      PrintGenericMessage('Aucun contact à supprimer.').getMessage();
       return;
     }
 
     displayContacts();
-    stdout.write('Entrez le numéro du contact à supprimer : ');
-    var contactToDelete = PhoneNumberFormater.formatPhoneNumber();
+    final contactToDelete = PhoneNumberFormater.formatPhoneNumber(
+        title: 'Entrez le numéro du contact à supprimer : ');
 
     contactRepository.deleteContact(contactToDelete: contactToDelete!);
-    print('Contact $contactToDelete supprimé avec succès.');
+    PrintGenericMessage('Contact $contactToDelete supprimé avec succès.')
+        .getMessage();
   }
 }

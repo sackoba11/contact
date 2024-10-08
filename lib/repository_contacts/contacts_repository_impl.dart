@@ -1,6 +1,8 @@
+import 'package:contact/core/utilities/generic_message/generic_message.dart';
 import 'package:contact/models/contact.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
 
+import '../core/utilities/contact_manager/contact_manager.dart';
 import '../core/utilities/contact_storage_manager/contact_storage_manager.dart';
 
 class ContactsRepositoryImpl implements ContactRepository {
@@ -14,7 +16,7 @@ class ContactsRepositoryImpl implements ContactRepository {
       contactStorageManager.saveContacts(contacts: contacts);
       return newContact;
     } catch (e) {
-      print(e);
+      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
     return null;
   }
@@ -22,10 +24,16 @@ class ContactsRepositoryImpl implements ContactRepository {
   @override
   Map<String, Contact>? getAllContacts() {
     try {
-      contacts = contactStorageManager.readContact()!;
+      final contentList = contactStorageManager.readContact()!;
+      contacts
+        ..clear()
+        ..addEntries(contentList.map((contact) {
+          final formattedContact = Contact.fromJson(contact);
+          return MapEntry(formattedContact.phoneNumber, formattedContact);
+        }));
       return contacts;
     } catch (e) {
-      print(e);
+      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
     return null;
   }
@@ -36,14 +44,20 @@ class ContactsRepositoryImpl implements ContactRepository {
       contacts.remove(contactToDelete);
       contactStorageManager.saveContacts(contacts: contacts);
     } catch (e) {
-      print(e);
+      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
 
     return;
   }
 
   @override
-  void updateContact({required Map<String, Contact> contactsUpdated}) {
-    contactStorageManager.saveContacts(contacts: contactsUpdated);
+  Contact updateContact({required String updateNumber}) {
+    final contactToUpdate = contacts[updateNumber];
+    final updatedContact =
+        ContactManager.updateDataContact(contactToUpdate: contactToUpdate!);
+    contacts[updateNumber] = updatedContact;
+    contactStorageManager.saveContacts(contacts: contacts);
+
+    return updatedContact;
   }
 }
