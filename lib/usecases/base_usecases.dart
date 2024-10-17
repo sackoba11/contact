@@ -1,16 +1,13 @@
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
+import 'package:contact/core/utilities/input_controller/input_controller.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
 
-import '../core/helpers/phone_number_formater/phone_number_formater.dart';
-import '../core/utilities/contact_storage_manager/contact_storage_manager.dart';
+import '../core/helpers/config/storage_config.dart';
 import '../core/utilities/contact_manager/contact_manager.dart';
 import '../repository_contacts/contacts_repository_impl.dart';
 
 class BaseUsecases {
-  // Map<String, Contact>? contacts = {};
-
   ContactRepository contactRepository = ContactsRepositoryImpl();
-  var contactStorageManager = ContactStorageManagerImpl();
 
   void addContact() {
     try {
@@ -34,7 +31,7 @@ class BaseUsecases {
 
       if (contacts != null) {
         PrintGenericMessage(
-                '${contacts.length} contact(s) chargé(s) depuis ${contactStorageManager.fileName}')
+                '${contacts.length} contact(s) chargé(s) depuis ${StorageConfig.storageFileName}')
             .getMessage();
 
         var number = 1;
@@ -63,9 +60,9 @@ class BaseUsecases {
       return;
     }
     // Demander à l'utilisateur quel numéro modifier
-    String updateNumber = PhoneNumberFormater.formatPhoneNumber(
-        title:
-            'Entrez le numéro à modifier parmi le(s) numéro(s) ci-dessus : ')!;
+    String updateNumber = InputController.inputController(
+        title: 'Entrez le numéro à modifier parmi le(s) numéro(s) ci-dessus : ',
+        typeData: TypeData.phoneNumber);
 
     if (contacts[updateNumber] != null) {
       PrintGenericMessage(
@@ -95,10 +92,11 @@ class BaseUsecases {
     }
 
     displayContacts();
-    final contactToDelete = PhoneNumberFormater.formatPhoneNumber(
-        title: 'Entrez le numéro du contact à supprimer : ');
+    final contactToDelete = InputController.inputController(
+        title: 'Entrez le numéro du contact à supprimer : ',
+        typeData: TypeData.phoneNumber);
 
-    contactRepository.deleteContact(contactToDelete: contactToDelete!);
+    contactRepository.deleteContact(contactToDelete: contactToDelete);
     PrintGenericMessage('Contact $contactToDelete supprimé avec succès.')
         .getMessage();
   }

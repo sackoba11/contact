@@ -1,6 +1,4 @@
 import '../../../models/contact.dart';
-import '../../helpers/email_formater/email_formater.dart';
-import '../../helpers/phone_number_formater/phone_number_formater.dart';
 import '../input_controller/input_controller.dart';
 
 class ContactManager {
@@ -11,10 +9,11 @@ class ContactManager {
 
     String lastName = InputController.inputController(title: 'Prénom: ');
 
-    String phoneNumber =
-        PhoneNumberFormater.formatPhoneNumber(title: 'Numéro de téléphone: ')!;
+    String phoneNumber = InputController.inputController(
+        title: 'Numéro de téléphone: ', typeData: TypeData.phoneNumber);
 
-    String? email = EmailFormater.formatEmail(title: 'Adresse e-mail: ');
+    String? email = InputController.inputController(
+        title: 'Adresse e-mail: ', typeData: TypeData.email);
 
     return Contact(
       firstName: firstName,
@@ -25,7 +24,6 @@ class ContactManager {
   }
 
   static Contact updateDataContact({required Contact contactToUpdate}) {
-    
     final newFirstName = InputController.inputController(
         title: 'Nouveau nom (${contactToUpdate.firstName}): ');
     if (newFirstName.isNotEmpty) {

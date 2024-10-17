@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:contact/core/helpers/config/storage_config.dart';
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
 
 import '../../../models/contact.dart';
@@ -13,8 +14,7 @@ abstract class ContactStorageManager {
 }
 
 class ContactStorageManagerImpl implements ContactStorageManager {
-  final String fileName = 'contacts.json';
-  final path = p.join(p.current, "lib", "data", "contacts.json");
+  final path = p.join(p.current, "lib", "data", StorageConfig.storageFileName);
 
   @override
   void saveContacts({required Map<String, Contact> contacts}) {
@@ -24,7 +24,9 @@ class ContactStorageManagerImpl implements ContactStorageManager {
         contacts.entries.map((contact) => contact.value.toJson()).toList();
     final content = json.encode(contentList);
     file.writeAsStringSync(content);
-    PrintGenericMessage('Contacts sauvegardés dans $fileName').getMessage();
+    PrintGenericMessage(
+            'Contacts sauvegardés dans ${StorageConfig.storageFileName}')
+        .getMessage();
   }
 
   @override
