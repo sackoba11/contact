@@ -5,8 +5,16 @@ import 'package:contact/core/utilities/generic_message/generic_message.dart';
 enum TypeData { email, phoneNumber }
 
 class InputController {
-  static String formatPhoneNumber({required String input}) {
+  static String inputDataMethode({String? title}) {
+    title != null ? stdout.write(title) : "";
+    String input = stdin.readLineSync()?.trim() ?? '';
+    return input;
+  }
+
+  static String formatPhoneNumber({String? title}) {
     while (true) {
+      String input = inputDataMethode(title: title);
+
       // Supprime les espaces et les tirets pour une validation plus simple
       String cleanedInput = input.replaceAll(RegExp(r'[\s-]'), '');
 
@@ -15,16 +23,18 @@ class InputController {
         return cleanedInput;
       } else {
         PrintGenericMessage(
-            'Numéro de téléphone invalide. Veuillez entrer un numéro valide de 10 chiffres.');
+                'Numéro de téléphone invalide. Veuillez entrer un numéro valide de 10 chiffres.')
+            .getMessage();
       }
     }
   }
 
-  static String formatEmail({required String input}) {
+  static String formatEmail({String? title}) {
     final emailRegex =
         RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
 
     while (true) {
+      String input = inputDataMethode(title: title);
       if (input.isEmpty) {
         return "";
       }
@@ -33,25 +43,24 @@ class InputController {
         return input;
       } else {
         PrintGenericMessage(
-            'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.');
+                'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.')
+            .getMessage();
       }
     }
   }
 
   static String inputController({String? title, TypeData? typeData}) {
-    title != null ? stdout.write(title) : "";
-    String input = stdin.readLineSync()?.trim() ?? '';
-
     switch (typeData) {
       case TypeData.email:
-        final inputData = formatEmail(input: input);
+        final inputData = formatEmail(title: title);
         return inputData;
 
       case TypeData.phoneNumber:
-        final inputData = formatPhoneNumber(input: input);
+        final inputData = formatPhoneNumber(title: title);
         return inputData;
 
       default:
+        String input = inputDataMethode(title: title);
         return input;
     }
   }

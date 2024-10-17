@@ -3,19 +3,18 @@ import 'package:contact/core/utilities/input_controller/input_controller.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
 
 import '../core/helpers/config/storage_config.dart';
-import '../core/utilities/contact_manager/contact_manager.dart';
+import '../models/contact.dart';
 import '../repository_contacts/contacts_repository_impl.dart';
 
 class BaseUsecases {
   ContactRepository contactRepository = ContactsRepositoryImpl();
 
-  void addContact() {
+  void addContact({required Contact newContact}) {
     try {
-      var newContact = ContactManager.createContact();
       var contact = contactRepository.addContact(newContact: newContact);
       if (contact != null) {
         PrintGenericMessage(
-                'Contact ajouté avec succès : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""}')
+                'Contact ajouté avec succès : ${contact.firstName != "" ? "Nom: ${contact.firstName} ," : ""} ${contact.lastName != "" ? " Prénom: ${contact.lastName} ," : ""} Numéro: ${contact.phoneNumber} ${contact.email != "" ? ", Email:${contact.email} " : ""} ')
             .getMessage();
       } else {
         PrintGenericMessage("Impossible d'ajouter ce contact").getMessage();
@@ -37,7 +36,7 @@ class BaseUsecases {
         var number = 1;
         contacts.forEach((key, contact) {
           PrintGenericMessage(
-                  "$number : Nom: ${contact.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""} ")
+                  "$number : ${contact.firstName != "" ? "Nom: ${contact.firstName} ," : ""} ${contact.lastName != "" ? " Prénom: ${contact.lastName} ," : ""} Numéro: ${contact.phoneNumber} ${contact.email != "" ? ", Email:${contact.email} " : ""} ")
               .getMessage();
           number++;
         });

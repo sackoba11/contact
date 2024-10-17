@@ -1,9 +1,11 @@
+import 'package:contact/core/utilities/generic_message/generic_message.dart';
+
 import '../../../models/contact.dart';
 import '../input_controller/input_controller.dart';
 
 class ContactManager {
   static Contact createContact() {
-    print("Saisie d'un nouveau contact:");
+    PrintGenericMessage("Saisie d'un nouveau contact:");
 
     String firstName = InputController.inputController(title: 'Nom: ');
 

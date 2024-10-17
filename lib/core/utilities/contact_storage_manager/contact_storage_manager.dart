@@ -19,7 +19,7 @@ class ContactStorageManagerImpl implements ContactStorageManager {
   @override
   void saveContacts({required Map<String, Contact> contacts}) {
     final file = File(path);
-    file.create(recursive: true);
+
     final contentList =
         contacts.entries.map((contact) => contact.value.toJson()).toList();
     final content = json.encode(contentList);

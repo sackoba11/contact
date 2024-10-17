@@ -1,10 +1,13 @@
+import 'package:contact/models/contact.dart';
+
+import '../core/utilities/contact_manager/contact_manager.dart';
+import '../core/utilities/generic_message/generic_message.dart';
 import '../core/utilities/input_controller/input_controller.dart';
 import '../usecases/base_usecases.dart';
 
 class Home {
   static void launch() {
     var baseusecases = BaseUsecases();
-  
 
     while (true) {
       print('\nGestion des contacts:');
@@ -19,7 +22,8 @@ class Home {
 
       switch (choix) {
         case '1':
-          baseusecases.addContact();
+          Contact newContact = ContactManager.createContact();
+          baseusecases.addContact(newContact: newContact);
           break;
         case '2':
           baseusecases.displayContacts();
@@ -34,7 +38,7 @@ class Home {
           print('Au revoir !');
           return;
         default:
-          print('Option invalide. Veuillez réessayer.');
+          PrintGenericMessage('Option invalide. Veuillez réessayer.');
       }
     }
   }

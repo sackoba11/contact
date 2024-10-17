@@ -13,5 +13,5 @@ class PrintGenericMessageError implements GenericMessage {
   final String _message;
   PrintGenericMessageError(this._message) : assert(_message.isNotEmpty);
   @override
-  void getMessage() =>print(_message);
+  void getMessage() => print(_message);
 }
