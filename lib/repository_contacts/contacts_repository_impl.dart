@@ -12,6 +12,7 @@ class ContactsRepositoryImpl implements ContactRepository {
   @override
   Contact? addContact({required Contact newContact}) {
     try {
+      getAllContacts();
       contacts[newContact.phoneNumber.toString()] = newContact;
       contactStorageManager.saveContacts(contacts: contacts);
       return newContact;

@@ -19,7 +19,6 @@ class ContactStorageManagerImpl implements ContactStorageManager {
   @override
   void saveContacts({required Map<String, Contact> contacts}) {
     final file = File(path);
-
     final contentList =
         contacts.entries.map((contact) => contact.value.toJson()).toList();
     final content = json.encode(contentList);
@@ -35,12 +34,7 @@ class ContactStorageManagerImpl implements ContactStorageManager {
     if (file.existsSync()) {
       final contentString = file.readAsStringSync();
       final contentList = json.decode(contentString) as List;
-
       return contentList;
-    } else {
-      PrintGenericMessage(
-              "Aucun fichier de contacts trouvé. Une nouvelle liste sera créée lors d'un ajout de contact")
-          .getMessage();
     }
     return [];
   }
