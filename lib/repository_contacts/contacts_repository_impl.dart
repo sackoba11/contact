@@ -10,16 +10,21 @@ class ContactsRepositoryImpl implements ContactRepository {
   Map<String, Contact> contacts = {};
 
   @override
-  Contact? addContact({required Contact newContact}) {
+  bool addContact({required Contact newContact}) {
     try {
       getAllContacts();
-      contacts[newContact.phoneNumber.toString()] = newContact;
-      contactStorageManager.saveContacts(contacts: contacts);
-      return newContact;
+      if (contacts[newContact.phoneNumber.toString()] != null) {
+        PrintGenericMessageError("Ce numéro exitse déjà.").getMessage();
+        return false;
+      } else {
+        contacts[newContact.phoneNumber.toString()] = newContact;
+        contactStorageManager.saveContacts(contacts: contacts);
+      }
+      return true;
     } catch (e) {
       PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
-    return null;
+    return false;
   }
 
   @override
@@ -40,15 +45,22 @@ class ContactsRepositoryImpl implements ContactRepository {
   }
 
   @override
-  void deleteContact({required String contactToDelete}) {
+  bool deleteContact({required String contactToDelete}) {
     try {
-      contacts.remove(contactToDelete);
-      contactStorageManager.saveContacts(contacts: contacts);
+      if (contacts[contactToDelete] != null) {
+        contacts.remove(contactToDelete);
+        contactStorageManager.saveContacts(contacts: contacts);
+        return true;
+      } else {
+        PrintGenericMessageError("Ce numéro n'exitse pas dans le repertoire.")
+            .getMessage();
+        return false;
+      }
     } catch (e) {
       PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
     }
 
-    return;
+    return false;
   }
 
   @override
