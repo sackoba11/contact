@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
 
 import '../../../models/contact.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as p;
 
 abstract class ContactStorageManager {
   void saveContacts({required Map<String, Contact> contacts});
@@ -12,10 +14,12 @@ abstract class ContactStorageManager {
 
 class ContactStorageManagerImpl implements ContactStorageManager {
   final String fileName = 'contacts.json';
+  final path = p.join(p.current, "lib", "data", "contacts.json");
 
   @override
   void saveContacts({required Map<String, Contact> contacts}) {
-    final file = File(fileName);
+    final file = File(path);
+    file.create(recursive: true);
     final contentList =
         contacts.entries.map((contact) => contact.value.toJson()).toList();
     final content = json.encode(contentList);
@@ -25,7 +29,7 @@ class ContactStorageManagerImpl implements ContactStorageManager {
 
   @override
   List? readContact() {
-    final file = File(fileName);
+    final file = File(path);
     if (file.existsSync()) {
       final contentString = file.readAsStringSync();
       final contentList = json.decode(contentString) as List;

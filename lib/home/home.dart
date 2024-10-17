@@ -4,6 +4,7 @@ import '../usecases/base_usecases.dart';
 class Home {
   static void launch() {
     var baseusecases = BaseUsecases();
+  
 
     while (true) {
       print('\nGestion des contacts:');
