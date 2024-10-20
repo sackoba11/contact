@@ -11,10 +11,10 @@ class BaseUsecases {
 
   void addContact({required Contact newContact}) {
     try {
-      var contact = contactRepository.addContact(newContact: newContact);
-      if (contact != null) {
+      final result = contactRepository.addContact(newContact: newContact);
+      if (result) {
         PrintGenericMessage(
-                'Contact ajouté avec succès : ${contact.firstName != "" ? "Nom: ${contact.firstName} ," : ""} ${contact.lastName != "" ? " Prénom: ${contact.lastName} ," : ""} Numéro: ${contact.phoneNumber} ${contact.email != "" ? ", Email:${contact.email} " : ""} ')
+                'Contact ajouté avec succès : ${newContact.firstName != "" ? "Nom: ${newContact.firstName} ," : ""} ${newContact.lastName != "" ? " Prénom: ${newContact.lastName} ," : ""} Numéro: ${newContact.phoneNumber} ${newContact.email != "" ? ", Email:${newContact.email} " : ""} ')
             .getMessage();
       } else {
         PrintGenericMessage("Impossible d'ajouter ce contact").getMessage();
@@ -95,8 +95,11 @@ class BaseUsecases {
         title: 'Entrez le numéro du contact à supprimer : ',
         typeData: TypeData.phoneNumber);
 
-    contactRepository.deleteContact(contactToDelete: contactToDelete);
-    PrintGenericMessage('Contact $contactToDelete supprimé avec succès.')
-        .getMessage();
+    final result =
+        contactRepository.deleteContact(contactToDelete: contactToDelete);
+    if (result) {
+      PrintGenericMessage('Contact $contactToDelete supprimé avec succès.')
+          .getMessage();
+    }
   }
 }
