@@ -83,7 +83,7 @@ class BaseUsecases {
     }
   }
 
-  void removeContact() {
+  void removeContact({required String number}) {
     final contacts = contactRepository.getAllContacts();
     if (contacts!.isEmpty) {
       PrintGenericMessage('Aucun contact à supprimer.').getMessage();
@@ -91,15 +91,13 @@ class BaseUsecases {
     }
 
     displayContacts();
-    final contactToDelete = InputController.inputController(
-        title: 'Entrez le numéro du contact à supprimer : ',
-        typeData: TypeData.phoneNumber);
+    // final contactToDelete = InputController.inputController(
+    //     title: 'Entrez le numéro du contact à supprimer : ',
+    //     typeData: TypeData.phoneNumber);
 
-    final result =
-        contactRepository.deleteContact(contactToDelete: contactToDelete);
+    final result = contactRepository.deleteContact(contactToDelete: number);
     if (result) {
-      PrintGenericMessage('Contact $contactToDelete supprimé avec succès.')
-          .getMessage();
+      PrintGenericMessage('Contact $number supprimé avec succès.').getMessage();
     }
   }
 }

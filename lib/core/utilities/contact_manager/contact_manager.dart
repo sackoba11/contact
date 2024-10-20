@@ -25,6 +25,38 @@ class ContactManager {
     );
   }
 
+  static Contact createContactWithArgs({required List<String> args}) {
+    if (args.length == 4) {
+      return Contact(
+        firstName: args[0],
+        lastName: args[1],
+        phoneNumber: args[2],
+        email: args[3],
+      );
+    } else if (args.length == 3) {
+      return Contact(
+        firstName: args[0],
+        lastName: args[1],
+        phoneNumber: args[2],
+        email: "",
+      );
+    } else if (args.length == 2) {
+      return Contact(
+        firstName: args[0],
+        lastName: "",
+        phoneNumber: args[1],
+        email: "",
+      );
+    } else {
+      return Contact(
+        firstName: "",
+        lastName: "",
+        phoneNumber: args[0],
+        email: "",
+      );
+    }
+  }
+
   static Contact updateDataContact({required Contact contactToUpdate}) {
     final newFirstName = InputController.inputController(
         title: 'Nouveau nom (${contactToUpdate.firstName}): ');
