@@ -28,16 +28,23 @@ class ContactManager {
 
   static Either<GenericMessage, Contact> createContactWithArgs(
       {required List<String> args}) {
+    late String number;
+    late String email;
+    late String errorNumber;
+    late String errorEmail;
+
     if (args.length == 4) {
-      late String number;
-      late String email;
       final numberformated =
           InputController.formatPhoneNumberFromArg(input: args[2]);
       final emailFormated = InputController.formatEmailFromArg(input: args[3]);
-      numberformated.fold((error) => error.printMessage(), (numb) {
+      numberformated.fold((error) {
+        errorNumber = error.getMessage();
+      }, (numb) {
         number = numb;
       });
-      emailFormated.fold((error) => error.printMessage(), (mail) {
+      emailFormated.fold((error) {
+        errorEmail = error.getMessage();
+      }, (mail) {
         email = mail;
       });
 
@@ -49,12 +56,13 @@ class ContactManager {
           email: email,
         ));
       }
-      return left(GenericMessageError("Une erreur s'est produite"));
+      return left(GenericMessageError("$errorNumber \n$errorEmail"));
     } else if (args.length == 3) {
-      late String number;
       final numberformated =
           InputController.formatPhoneNumberFromArg(input: args[2]);
-      numberformated.fold((error) => error.printMessage(), (numb) {
+      numberformated.fold((error) {
+        errorNumber = error.getMessage();
+      }, (numb) {
         number = numb;
       });
       if (numberformated.isRight()) {
@@ -65,12 +73,13 @@ class ContactManager {
           email: "",
         ));
       }
-      return left(GenericMessageError("Une erreur s'est produite"));
+      return left(GenericMessageError(errorNumber));
     } else if (args.length == 2) {
-      late String number;
       final numberformated =
           InputController.formatPhoneNumberFromArg(input: args[1]);
-      numberformated.fold((error) => error.printMessage(), (numb) {
+      numberformated.fold((error) {
+        errorNumber = error.getMessage();
+      }, (numb) {
         number = numb;
       });
       if (numberformated.isRight()) {
@@ -81,12 +90,13 @@ class ContactManager {
           email: "",
         ));
       }
-      return left(GenericMessageError("Une erreur s'est produite"));
+      return left(GenericMessageError(errorNumber));
     } else {
-      late String number;
       final numberformated =
           InputController.formatPhoneNumberFromArg(input: args[0]);
-      numberformated.fold((error) => error.printMessage(), (numb) {
+      numberformated.fold((error) {
+        errorNumber = error.getMessage();
+      }, (numb) {
         number = numb;
       });
       if (numberformated.isRight()) {
@@ -97,7 +107,7 @@ class ContactManager {
           email: "",
         ));
       }
-      return left(GenericMessageError("Une erreur s'est produite"));
+      return left(GenericMessageError(errorNumber));
     }
   }
 
