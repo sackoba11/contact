@@ -1,17 +1,22 @@
 abstract class GenericMessage {
-  void getMessage();
+  String getMessage();
+  void printMessage();
 }
 
-class PrintGenericMessage implements GenericMessage {
+class GenericMessageImpl implements GenericMessage {
   final String _message;
-  PrintGenericMessage(this._message) : assert(_message.isNotEmpty);
+  GenericMessageImpl(this._message) : assert(_message.isNotEmpty);
   @override
-  void getMessage() => print(_message);
+  void printMessage() => print(_message);
+  @override
+  String getMessage() => _message;
 }
 
-class PrintGenericMessageError implements GenericMessage {
+class GenericMessageError implements GenericMessage {
   final String _message;
-  PrintGenericMessageError(this._message) : assert(_message.isNotEmpty);
+  GenericMessageError(this._message) : assert(_message.isNotEmpty);
   @override
-  void getMessage() => print(_message);
+  String getMessage() => _message;
+  @override
+  void printMessage() => print(_message);
 }

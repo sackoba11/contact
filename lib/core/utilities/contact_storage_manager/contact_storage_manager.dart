@@ -23,7 +23,7 @@ class ContactStorageManagerImpl implements ContactStorageManager {
         contacts.entries.map((contact) => contact.value.toJson()).toList();
     final content = json.encode(contentList);
     file.writeAsStringSync(content);
-    PrintGenericMessage(
+    GenericMessageImpl(
             'Contacts sauvegardés dans ${StorageConfig.storageFileName}')
         .getMessage();
   }

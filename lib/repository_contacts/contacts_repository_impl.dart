@@ -1,6 +1,7 @@
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
 import 'package:contact/models/contact.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
+import 'package:dartz/dartz.dart';
 
 import '../core/utilities/contact_manager/contact_manager.dart';
 import '../core/utilities/contact_storage_manager/contact_storage_manager.dart';
@@ -10,25 +11,23 @@ class ContactsRepositoryImpl implements ContactRepository {
   Map<String, Contact> contacts = {};
 
   @override
-  bool addContact({required Contact newContact}) {
+  Either<GenericMessage, bool> addContact({required Contact newContact}) {
     try {
       getAllContacts();
       if (contacts[newContact.phoneNumber.toString()] != null) {
-        PrintGenericMessageError("Ce numéro exitse déjà.").getMessage();
-        return false;
+        return left(GenericMessageError("Ce numéro exitse déjà."));
       } else {
         contacts[newContact.phoneNumber.toString()] = newContact;
         contactStorageManager.saveContacts(contacts: contacts);
+        return right(true);
       }
-      return true;
     } catch (e) {
-      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
+      return left(GenericMessageError("Une erreur s'est produite : \n$e"));
     }
-    return false;
   }
 
   @override
-  Map<String, Contact>? getAllContacts() {
+  Either<GenericMessage, Map<String, Contact>> getAllContacts() {
     try {
       final contentList = contactStorageManager.readContact()!;
       contacts
@@ -37,40 +36,42 @@ class ContactsRepositoryImpl implements ContactRepository {
           final formattedContact = Contact.fromJson(contact);
           return MapEntry(formattedContact.phoneNumber, formattedContact);
         }));
-      return contacts;
+      return right(contacts);
     } catch (e) {
-      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
+      return left(GenericMessageError("Une erreur s'est produite : \n $e"));
     }
-    return null;
   }
 
   @override
-  bool deleteContact({required String contactToDelete}) {
+  Either<GenericMessage, Contact> updateContact(
+      {required String updateNumber}) {
+    try {
+      final contactToUpdate = contacts[updateNumber];
+      final updatedContact =
+          ContactManager.updateDataContact(contactToUpdate: contactToUpdate!);
+      contacts[updateNumber] = updatedContact;
+      contactStorageManager.saveContacts(contacts: contacts);
+
+      return right(updatedContact);
+    } catch (e) {
+      return left(GenericMessageError("Une erreur s'est produite : \n$e"));
+    }
+  }
+
+  @override
+  Either<GenericMessage, bool> deleteContact(
+      {required String contactToDelete}) {
     try {
       if (contacts[contactToDelete] != null) {
         contacts.remove(contactToDelete);
         contactStorageManager.saveContacts(contacts: contacts);
-        return true;
+        return right(true);
       } else {
-        PrintGenericMessageError("Ce numéro n'exitse pas dans le repertoire.")
-            .getMessage();
-        return false;
+        return left(
+            GenericMessageError("Ce numéro n'exitse pas dans le repertoire."));
       }
     } catch (e) {
-      PrintGenericMessageError("Une erreur s'est produite : $e").getMessage();
+      return left(GenericMessageError("Une erreur s'est produite : \n$e"));
     }
-
-    return false;
-  }
-
-  @override
-  Contact updateContact({required String updateNumber}) {
-    final contactToUpdate = contacts[updateNumber];
-    final updatedContact =
-        ContactManager.updateDataContact(contactToUpdate: contactToUpdate!);
-    contacts[updateNumber] = updatedContact;
-    contactStorageManager.saveContacts(contacts: contacts);
-
-    return updatedContact;
   }
 }

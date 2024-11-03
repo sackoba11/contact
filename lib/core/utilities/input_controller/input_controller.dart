@@ -22,7 +22,7 @@ class InputController {
       if (RegExp(r'^[0-9]{10}$').hasMatch(cleanedInput)) {
         return cleanedInput;
       } else {
-        PrintGenericMessage(
+        GenericMessageImpl(
                 'Numéro de téléphone invalide. Veuillez entrer un numéro valide de 10 chiffres.')
             .getMessage();
       }
@@ -42,7 +42,7 @@ class InputController {
       if (emailRegex.hasMatch(input)) {
         return input;
       } else {
-        PrintGenericMessage(
+        GenericMessageImpl(
                 'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.')
             .getMessage();
       }

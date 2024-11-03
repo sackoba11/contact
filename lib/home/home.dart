@@ -15,7 +15,7 @@ class Home {
           Contact newContact = ContactManager.createContactWithArgs(args: args);
           baseusecases.addContact(newContact: newContact);
         } else {
-          PrintGenericMessage('Veuillez saisir au moins le numéro!')
+          GenericMessageImpl('Veuillez saisir au moins le numéro!')
               .getMessage();
           return;
         }
@@ -31,8 +31,7 @@ class Home {
         break;
 
       default:
-        PrintGenericMessage('Option invalide. Veuillez réessayer.')
-            .getMessage();
+        GenericMessageImpl('Option invalide. Veuillez réessayer.').getMessage();
         Usage.printUsage();
         return;
     }
