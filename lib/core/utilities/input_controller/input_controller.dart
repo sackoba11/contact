@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
+import 'package:dartz/dartz.dart';
 
 enum TypeData { email, phoneNumber }
 
@@ -46,6 +47,33 @@ class InputController {
                 'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.')
             .getMessage();
       }
+    }
+  }
+
+  static Either<GenericMessage, String> formatPhoneNumberFromArg(
+      {required String input}) {
+    // Supprime les espaces et les tirets pour une validation plus simple
+    String cleanedInput = input.replaceAll(RegExp(r'[\s-]'), '');
+
+    // Vérifie si l'entrée ne contient que des chiffres et a une longueur appropriée
+    if (RegExp(r'^[0-9]{10}$').hasMatch(cleanedInput)) {
+      return right(cleanedInput);
+    } else {
+      return left(GenericMessageImpl(
+          'Numéro de téléphone invalide. Veuillez entrer un numéro valide de 10 chiffres.'));
+    }
+  }
+
+  static Either<GenericMessage, String> formatEmailFromArg(
+      {required String input}) {
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
+
+    if (emailRegex.hasMatch(input)) {
+      return right(input);
+    } else {
+      return left(GenericMessageImpl(
+          'Adresse e-mail invalide. Veuillez entrer une adresse e-mail valide.'));
     }
   }
 

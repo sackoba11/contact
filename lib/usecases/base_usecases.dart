@@ -44,6 +44,32 @@ class BaseUsecases {
     }
   }
 
+  void search({required String searchContact}) {
+    try {
+      final contacts = contactRepository.getAllContacts();
+      contacts.fold((error) => error.printMessage(), (contacts) {
+        if (contacts.isEmpty) {
+          GenericMessageImpl(
+                  "Le repertoire est vide. Veuillez ajouter des contacts !")
+              .printMessage();
+          return;
+        }
+        if (contacts[searchContact] == null) {
+          GenericMessageImpl(
+                  "Aucun contact du repertoire ne correspond au numéro : $searchContact")
+              .printMessage();
+          return;
+        }
+        final contact = contacts[searchContact];
+        GenericMessageImpl(
+                " Contact trouvé : \nNom: ${contact!.firstName}, Prénom: ${contact.lastName}, Numéro: ${contact.phoneNumber} ${contact.email != null ? ", Email:${contact.email} " : ""}")
+            .printMessage();
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void updateContact({required String updateNumber}) {
     final contacts = contactRepository.getAllContacts();
     contacts.fold((error) => error.printMessage(), (contacts) {
@@ -57,7 +83,7 @@ class BaseUsecases {
 
       if (contacts[updateNumber] == null) {
         GenericMessageImpl(
-                "Aucun contact ne correspond au contact : $updateNumber")
+                "Aucun contact du repertoire ne correspond au numéro : $updateNumber")
             .printMessage();
         return;
       }

@@ -4,11 +4,11 @@ class Usage {
 Usage: contact <commande> [arguments]
 
 Commandes disponibles:
-  -add <nom> <prenom> <telephone> <email>
+  -add <first name> <last name> <number> <email>
   -display
-  -update <numero> <nom> <prenom> <numero> <email>
+  -search <number>
+  -update <number>
   -remove <number>
- 
   ''');
   }
 }

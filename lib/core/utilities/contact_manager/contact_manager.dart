@@ -1,4 +1,5 @@
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
+import 'package:dartz/dartz.dart';
 
 import '../../../models/contact.dart';
 import '../input_controller/input_controller.dart';
@@ -25,35 +26,78 @@ class ContactManager {
     );
   }
 
-  static Contact createContactWithArgs({required List<String> args}) {
+  static Either<GenericMessage, Contact> createContactWithArgs(
+      {required List<String> args}) {
     if (args.length == 4) {
-      return Contact(
-        firstName: args[0],
-        lastName: args[1],
-        phoneNumber: args[2],
-        email: args[3],
-      );
+      late String number;
+      late String email;
+      final numberformated =
+          InputController.formatPhoneNumberFromArg(input: args[2]);
+      final emailFormated = InputController.formatEmailFromArg(input: args[3]);
+      numberformated.fold((error) => error.printMessage(), (numb) {
+        number = numb;
+      });
+      emailFormated.fold((error) => error.printMessage(), (mail) {
+        email = mail;
+      });
+
+      if (numberformated.isRight() && emailFormated.isRight()) {
+        return right(Contact(
+          firstName: args[0],
+          lastName: args[1],
+          phoneNumber: number,
+          email: email,
+        ));
+      }
+      return left(GenericMessageError("Une erreur s'est produite"));
     } else if (args.length == 3) {
-      return Contact(
-        firstName: args[0],
-        lastName: args[1],
-        phoneNumber: args[2],
-        email: "",
-      );
+      late String number;
+      final numberformated =
+          InputController.formatPhoneNumberFromArg(input: args[2]);
+      numberformated.fold((error) => error.printMessage(), (numb) {
+        number = numb;
+      });
+      if (numberformated.isRight()) {
+        return right(Contact(
+          firstName: args[0],
+          lastName: args[1],
+          phoneNumber: number,
+          email: "",
+        ));
+      }
+      return left(GenericMessageError("Une erreur s'est produite"));
     } else if (args.length == 2) {
-      return Contact(
-        firstName: args[0],
-        lastName: "",
-        phoneNumber: args[1],
-        email: "",
-      );
+      late String number;
+      final numberformated =
+          InputController.formatPhoneNumberFromArg(input: args[1]);
+      numberformated.fold((error) => error.printMessage(), (numb) {
+        number = numb;
+      });
+      if (numberformated.isRight()) {
+        return right(Contact(
+          firstName: args[0],
+          lastName: "",
+          phoneNumber: number,
+          email: "",
+        ));
+      }
+      return left(GenericMessageError("Une erreur s'est produite"));
     } else {
-      return Contact(
-        firstName: "",
-        lastName: "",
-        phoneNumber: args[0],
-        email: "",
-      );
+      late String number;
+      final numberformated =
+          InputController.formatPhoneNumberFromArg(input: args[0]);
+      numberformated.fold((error) => error.printMessage(), (numb) {
+        number = numb;
+      });
+      if (numberformated.isRight()) {
+        return right(Contact(
+          firstName: "",
+          lastName: "",
+          phoneNumber: number,
+          email: "",
+        ));
+      }
+      return left(GenericMessageError("Une erreur s'est produite"));
     }
   }
 
