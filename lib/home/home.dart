@@ -11,20 +11,25 @@ class Home {
 
     switch (choix) {
       case '-add':
-        if (args.isNotEmpty) {
-          Contact newContact = ContactManager.createContactWithArgs(args: args);
-          baseusecases.addContact(newContact: newContact);
-        } else {
-          GenericMessageImpl('Veuillez saisir au moins le numéro!')
-              .getMessage();
+        if (args.isEmpty) {
+          GenericMessageImpl('Veuillez saisir au moins un numéro!')
+              .printMessage();
           return;
         }
+        Contact newContact = ContactManager.createContactWithArgs(args: args);
+        baseusecases.addContact(newContact: newContact);
         break;
       case '-display':
         baseusecases.displayContacts();
         break;
       case '-update':
-        baseusecases.updateContact();
+        if (args.isEmpty || args.length > 1) {
+          GenericMessageImpl('Veuillez ajouter le numéro à modifier.')
+              .printMessage();
+          return;
+        }
+        
+        baseusecases.updateContact(updateNumber: args[0]);
         break;
       case '-remove':
         baseusecases.removeContact(number: args[0]);

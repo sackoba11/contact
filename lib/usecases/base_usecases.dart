@@ -1,5 +1,4 @@
 import 'package:contact/core/utilities/generic_message/generic_message.dart';
-import 'package:contact/core/utilities/input_controller/input_controller.dart';
 import 'package:contact/repository_contacts/contacts_repository.dart';
 
 import '../core/helpers/config/storage_config.dart';
@@ -45,7 +44,7 @@ class BaseUsecases {
     }
   }
 
-  void updateContact() {
+  void updateContact({required String updateNumber}) {
     final contacts = contactRepository.getAllContacts();
     contacts.fold((error) => error.printMessage(), (contacts) {
       if (contacts.isEmpty) {
@@ -55,10 +54,6 @@ class BaseUsecases {
         return;
       }
       displayContacts();
-      String updateNumber = InputController.inputController(
-          title:
-              'Entrez le numéro à modifier parmi le(s) numéro(s) ci-dessus : ',
-          typeData: TypeData.phoneNumber);
 
       if (contacts[updateNumber] == null) {
         GenericMessageImpl(
@@ -74,8 +69,8 @@ class BaseUsecases {
 
       updatedContact.fold((error) => error.printMessage(), (updatedContact) {
         GenericMessageImpl(
-              "Nom: ${updatedContact.firstName}, Prénom: ${updatedContact.lastName}, Numéro: ${updatedContact.phoneNumber} ${updatedContact.email != null ? ", Email:${updatedContact.email} " : ""} modifié avec succès.")
-          .printMessage();
+                "Nom: ${updatedContact.firstName}, Prénom: ${updatedContact.lastName}, Numéro: ${updatedContact.phoneNumber} ${updatedContact.email != null ? ", Email:${updatedContact.email} " : ""} modifié avec succès.")
+            .printMessage();
       });
     });
   }
